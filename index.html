@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -290,6 +290,8 @@ a.press-item:last-child::after { content: ''; }
 /* ═══ ANIMATIONS ═══ */
 .reveal { opacity: 0; transform: translateY(12px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+/* Fallback: show content if JS hasn't loaded yet */
+.no-js .reveal { opacity: 1; transform: none; }
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 700px) {
@@ -358,7 +360,7 @@ a.press-item:last-child::after { content: ''; }
         </div>
       </div>
       <div class="builder-photo">
-        <img src="https://rewindme.studio/images/flex-portrait.jpg" alt="Ludwig Flex Vonmesser" onerror="this.parentElement.style.display='none'" />
+        <img src="flex.png" alt="Ludwig Flex Vonmesser" onerror="this.parentElement.style.display='none'" />
       </div>
     </div>
     <div class="builder-rule"></div>
@@ -589,12 +591,14 @@ a.press-item:last-child::after { content: ''; }
     <div class="colophon-sig">
       <span class="sig-name">Flex</span>
       <span class="sig-location">Vlorë, Albania — 2026</span>
-      <a href="mailto:flex@wantmymtv.xyz" class="sig-contact">flex@wantmymtv.xyz</a>
+      <a href="/cdn-cgi/l/email-protection#492f252c31093e28273d2430243d3f67313033" class="sig-contact"><span class="__cf_email__" data-cfemail="8debe1e8f5cdfaece3f9e0f4e0f9fba3f5f4f7">[email&#160;protected]</span></a>
     </div>
   </footer>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+document.documentElement.classList.remove('no-js');
+
 function toggleTheme() {
   const html = document.documentElement;
   const label = document.querySelector('.toggle-label');
@@ -604,11 +608,4 @@ function toggleTheme() {
 }
 
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80);
-  });
-}, { threshold: 0.06 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
-</body>
-</html>
+  entri
