@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flex — Works</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Martian+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f6f4f0;
+  --text: #1a1a1a;
+  --text-secondary: #6b6560;
+  --text-tertiary: #a09890;
+  --rule: #d8d4ce;
+  --rule-dark: #1a1a1a;
+  --accent: #c0392b;
+}
+
+[data-theme="dark"] {
+  --bg: #0e0e10;
+  --text: #e0ddd8;
+  --text-secondary: #908a82;
+  --text-tertiary: #5a554e;
+  --rule: #252320;
+  --rule-dark: #e0ddd8;
+  --accent: #e85d4a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'EB Garamond', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+::selection { background: var(--text); color: var(--bg); }
+a { color: inherit; text-decoration: none; }
+
+/* ═══ THEME TOGGLE ═══ */
+.toggle {
+  position: fixed;
+  top: 2rem;
+  right: 2.5rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.toggle-label {
+  font-family: 'Martian Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  transition: color 0.4s ease;
+}
+
+.toggle-track {
+  width: 32px;
+  height: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  position: relative;
+  transition: border-color 0.4s ease;
+}
+
+.toggle-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .toggle-thumb {
+  left: 18px;
+  background: var(--accent);
+}
+
+.page { max-width: 820px; margin: 0 auto; padding: 0 2.5rem; }
+
+/* ═══ HEADER ═══ */
+header { padding: 6rem 0 4rem; border-bottom: 2px solid var(--rule-dark); transition: border-color 0.4s ease; }
+
+.header-top {
+  display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3rem;
+}
+.name { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; }
+.date {
+  font-family: 'Martian Mono', monospace; font-size: 0.6rem; font-weight: 300;
+  color: var(--text-tertiary); letter-spacing: 0.05em;
+}
+
+.header-title {
+  font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 400; line-height: 1;
+  letter-spacing: -0.025em; margin-bottom: 1.5rem;
+}
+.header-title em { font-style: italic; }
+
+.header-subtitle {
+  font-size: 1.15rem; color: var(--text-secondary); font-weight: 400;
+  line-height: 1.7; max-width: 560px; font-style: italic;
+}
+
+.header-meta {
+  display: flex; gap: 3rem; margin-top: 2.5rem;
+  padding-top: 1.5rem; border-top: 1px solid var(--rule);
+}
+.meta-item { display: flex; flex-direction: column; gap: 0.2rem; }
+.meta-label {
+  font-family: 'Martian Mono', monospace; font-size: 0.55rem; font-weight: 300;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-tertiary);
+}
+.meta-value { font-size: 1rem; font-weight: 500; }
+
+/* ═══ THE BUILDER ═══ */
+.builder { padding: 3.5rem 0 0; }
+
+.builder-rule {
+  height: 1px; background: var(--rule); margin: 0; transition: background 0.4s ease;
+}
+
+.builder-layout {
+  display: flex; gap: 3rem; padding: 2.5rem 0; align-items: flex-start;
+}
+
+.builder-text { flex: 1; }
+
+.builder-photo {
+  flex-shrink: 0; width: 180px; overflow: hidden;
+  filter: grayscale(100%); transition: filter 0.4s ease;
+}
+
+.builder-photo:hover { filter: grayscale(0%); }
+
+.builder-photo img {
+  width: 100%; height: auto; display: block;
+}
+
+.builder-label {
+  font-family: 'Martian Mono', monospace; font-size: 0.55rem; font-weight: 300;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-tertiary);
+  margin-bottom: 0.5rem;
+}
+
+.builder-name {
+  font-family: 'EB Garamond', serif; font-size: 1.6rem; font-weight: 500;
+  margin-bottom: 1rem; letter-spacing: 0.01em;
+}
+
+.builder-bio {
+  font-size: 1rem; color: var(--text-secondary); line-height: 1.75;
+  font-style: italic; max-width: 480px; margin-bottom: 0.5rem;
+}
+
+.builder-press { margin-top: 1.5rem; }
+
+.builder-press .press-label {
+  font-family: 'Martian Mono', monospace; font-size: 0.55rem; font-weight: 300;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-tertiary);
+  margin-bottom: 0.75rem;
+}
+
+.press-note {
+  font-family: 'EB Garamond', serif; font-size: 0.8rem; font-style: italic;
+  font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text-tertiary);
+  margin-left: 0.4rem;
+}
+
+.press-grid {
+  display: flex; flex-wrap: wrap; gap: 0.15rem 0; line-height: 1;
+}
+
+a.press-item {
+  font-size: 0.9rem; font-weight: 500; font-style: italic;
+  transition: color 0.25s ease; text-decoration: none;
+}
+
+a.press-item:hover { color: var(--accent); }
+
+a.press-item::after {
+  content: '\00a0\00a0·\00a0\00a0';
+  color: var(--text-tertiary);
+  font-style: normal;
+}
+
+a.press-item:last-child::after { content: ''; }
+
+@media (max-width: 700px) {
+  .builder-layout { flex-direction: column-reverse; gap: 1.5rem; }
+  .builder-photo { width: 140px; }
+}
+
+/* ═══ OPUS SECTIONS ═══ */
+.opus { padding: 3.5rem 0 0; }
+
+.opus-header {
+  display: flex; align-items: baseline; gap: 1rem;
+  padding-bottom: 0.75rem; border-bottom: 2px solid var(--rule-dark); transition: border-color 0.4s ease;
+}
+.opus-number {
+  font-family: 'Martian Mono', monospace; font-size: 0.6rem; font-weight: 400;
+  color: var(--text-tertiary); letter-spacing: 0.08em; flex-shrink: 0;
+}
+.opus-title {
+  font-size: 1.35rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.opus-aside {
+  font-size: 0.95rem; color: var(--text-secondary); font-style: italic;
+  margin-left: auto; text-align: right; flex-shrink: 0;
+}
+
+/* ═══ WORK ENTRIES ═══ */
+.work {
+  display: block; padding: 1.25rem 0; border-bottom: 1px solid var(--rule);
+  transition: all 0.25s ease, border-color 0.4s ease;
+}
+.work:hover { padding-left: 0.75rem; }
+.work:hover .work-title { color: var(--accent); }
+.work:hover .work-arrow { opacity: 1; transform: translateX(0); }
+.work:hover .work-url { color: var(--text-secondary); }
+
+.work-row { display: flex; align-items: baseline; gap: 1.5rem; }
+
+.work-index {
+  font-family: 'Martian Mono', monospace; font-size: 0.55rem; font-weight: 300;
+  color: var(--text-tertiary); min-width: 2rem; letter-spacing: 0.05em;
+}
+.work-title { font-size: 1.3rem; font-weight: 500; transition: color 0.25s ease; flex-shrink: 0; }
+.work-dash { color: var(--text-tertiary); font-weight: 300; flex-shrink: 0; }
+.work-desc { font-size: 0.95rem; color: var(--text-secondary); font-style: italic; line-height: 1.5; flex: 1; }
+.work-arrow {
+  font-size: 0.85rem; opacity: 0; transform: translateX(-8px);
+  transition: all 0.25s ease; margin-left: auto; flex-shrink: 0; color: var(--accent);
+}
+
+.work-meta { display: flex; align-items: baseline; gap: 1.5rem; margin-top: 0.3rem; padding-left: 3.5rem; }
+.work-url {
+  font-family: 'Martian Mono', monospace; font-size: 0.58rem; font-weight: 300;
+  color: var(--text-tertiary); letter-spacing: 0.03em; transition: color 0.25s ease;
+}
+.work-status { font-family: 'Martian Mono', monospace; font-size: 0.55rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; }
+.status-live { color: #2a9d5c; }
+.status-hub { color: var(--text-secondary); }
+.status-soon { color: var(--text-tertiary); }
+.status-beta { color: #d4a843; }
+
+/* Featured */
+.work-featured { padding: 2rem 0; }
+.work-featured .work-title { font-size: 1.8rem; }
+.work-featured .work-desc { font-size: 1.05rem; }
+.work-stats { display: flex; gap: 2.5rem; margin-top: 0.75rem; padding-left: 3.5rem; }
+.work-stat {
+  font-family: 'Martian Mono', monospace; font-size: 0.55rem; font-weight: 300;
+  color: var(--text-tertiary); letter-spacing: 0.05em;
+}
+.work-stat strong { color: var(--text); font-weight: 400; }
+
+/* ═══ COLOPHON ═══ */
+.colophon { padding: 4rem 0 3rem; margin-top: 3rem; border-top: 2px solid var(--rule-dark); transition: border-color 0.4s ease; }
+.colophon-text {
+  font-size: 1.05rem; font-style: italic; color: var(--text-secondary); line-height: 1.8; max-width: 520px;
+}
+.colophon-sig { margin-top: 2rem; display: flex; justify-content: space-between; align-items: baseline; }
+.sig-name { font-size: 1rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+.sig-location {
+  font-family: 'Martian Mono', monospace; font-size: 0.58rem; font-weight: 300;
+  color: var(--text-tertiary); letter-spacing: 0.05em;
+}
+.sig-contact {
+  font-family: 'Martian Mono', monospace; font-size: 0.58rem; font-weight: 300;
+  color: var(--text-tertiary); letter-spacing: 0.03em; transition: color 0.25s ease;
+}
+.sig-contact:hover { color: var(--accent); }
+
+/* ═══ ANIMATIONS ═══ */
+.reveal { opacity: 0; transform: translateY(12px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 700px) {
+  .page { padding: 0 1.5rem; }
+  header { padding: 4rem 0 3rem; }
+  .header-meta { flex-wrap: wrap; gap: 1.5rem; }
+  .opus-header { flex-direction: column; gap: 0.3rem; }
+  .opus-aside { margin-left: 0; text-align: left; }
+  .work-row { flex-direction: column; gap: 0.15rem; }
+  .work-meta, .work-stats { padding-left: 0; flex-wrap: wrap; }
+  .work-arrow { display: none; }
+  .colophon-sig { flex-direction: column; gap: 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="toggle" onclick="toggleTheme()" role="button" aria-label="Toggle dark mode">
+  <span class="toggle-label">Dark</span>
+  <div class="toggle-track"><div class="toggle-thumb"></div></div>
+</div>
+
+<div class="page">
+
+  <header class="reveal">
+    <div class="header-top">
+      <span class="name">Flex</span>
+      <span class="date">February 2026</span>
+    </div>
+    <h1 class="header-title">Complete <em>Works</em></h1>
+    <p class="header-subtitle">Sixteen platforms for cultural preservation, live media, artificial intelligence, and digital art — built without algorithms, venture capital, or compromise.</p>
+    <div class="header-meta">
+      <div class="meta-item"><span class="meta-label">Projects</span><span class="meta-value">16</span></div>
+      <div class="meta-item"><span class="meta-label">Users</span><span class="meta-value">1,000,000+</span></div>
+      <div class="meta-item"><span class="meta-label">Donated</span><span class="meta-value">$25,000+</span></div>
+      <div class="meta-item"><span class="meta-label">Algorithms</span><span class="meta-value">Zero</span></div>
+      <div class="meta-item"><span class="meta-label">Based in</span><span class="meta-value">Vlorë, Albania</span></div>
+    </div>
+  </header>
+
+  <!-- ═══ THE BUILDER ═══ -->
+  <section class="builder reveal">
+    <div class="builder-rule"></div>
+    <div class="builder-layout">
+      <div class="builder-text">
+        <p class="builder-label">The Builder</p>
+        <h2 class="builder-name">Ludwig "Flex" Vonmesser</h2>
+        <p class="builder-bio">Cultural technologist. Former gem dealer. Academically trained art historian and curator. Great-nephew of Ken Kesey. Building the anti-algorithm internet solo from Vlorë, Albania — on the principle that the internet works better when nobody is optimizing it.</p>
+        <div class="builder-press">
+          <p class="press-label">Featured In <span class="press-note">(selected press)</span></p>
+          <div class="press-grid">
+            <a href="https://www.nytimes.com/2026/01/14/arts/music/mtv-rewind-video-database.html" target="_blank" class="press-item">The New York Times</a>
+            <a href="https://www.rollingstone.it/musica/news-musica/qualcuno-ha-ricreato-online-la-vecchia-mtv-con-35-mila-video-e-spot-pubblicitari-depoca/1015811/" target="_blank" class="press-item">Rolling Stone</a>
+            <a href="https://www.bostonglobe.com/2026/01/09/arts/mtv-rewind/" target="_blank" class="press-item">The Boston Globe</a>
+            <a href="https://www.billboard.com/music/music-news/mtv-rewind-33000-videos-shutdown-overseas-music-only-channels-1236150276/" target="_blank" class="press-item">Billboard</a>
+            <a href="https://www.vice.com/en/article/mtv-music-channels-come-back-from-the-dead-with-fan-made-website/" target="_blank" class="press-item">VICE</a>
+            <a href="https://gizmodo.com/mtv-is-officially-dead-its-time-for-zombie-mtv-to-live-in-your-browser-2000706831" target="_blank" class="press-item">Gizmodo</a>
+            <a href="https://kottke.org/26/01/mtv-rewind" target="_blank" class="press-item">Kottke.org</a>
+            <a href="https://www.upworthy.com/mtv-music-video-tribute-site" target="_blank" class="press-item">Upworthy</a>
+            <a href="https://loudwire.com/coder-built-mtv-rewind-videos-app/" target="_blank" class="press-item">Loudwire</a>
+            <a href="https://cdm.link/forget-channel-closures-watch-every-decade-of-mtv-music-videos-online/" target="_blank" class="press-item">Create Digital Music</a>
+            <a href="https://rvamag.com/music/mtv-stopped-playing-music-videos-someone-built-a-site-to-bring-them-all-back.html" target="_blank" class="press-item">RVA Magazine</a>
+            <a href="https://www.producthunt.com/products/mtv-rewind-music-videos-24-7-ad-free" target="_blank" class="press-item">Product Hunt</a>
+            <a href="https://midnightrebels.com/mtv-rewind-the-33000-video-archive-restoring-music-history/" target="_blank" class="press-item">Midnight Rebels</a>
+          </div>
+        </div>
+      </div>
+      <div class="builder-photo">
+        <img src="https://rewindme.studio/images/flex-portrait.jpg" alt="Ludwig Flex Vonmesser" onerror="this.parentElement.style.display='none'" />
+      </div>
+    </div>
+    <div class="builder-rule"></div>
+  </section>
+
+  <!-- ═══ OPUS I ═══ -->
+  <section class="opus reveal">
+    <div class="opus-header">
+      <span class="opus-number">Opus I</span>
+      <h2 class="opus-title">The Rewind Network</h2>
+      <span class="opus-aside">Cultural resistance through preservation</span>
+    </div>
+
+    <a href="https://wantmymtv.xyz" target="_blank" class="work work-featured">
+      <div class="work-row">
+        <span class="work-index">I.i</span>
+        <span class="work-title">MTV Rewind</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">The original. 50,000+ music videos across 33 channels, streaming 24/7. Featured in The New York Times and Rolling Stone.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-stats">
+        <span class="work-stat"><strong>50,000+</strong> videos</span>
+        <span class="work-stat"><strong>33</strong> channels</span>
+        <span class="work-stat"><strong>4,000+</strong> concurrent</span>
+      </div>
+      <div class="work-meta">
+        <span class="work-url">wantmymtv.xyz</span>
+        <span class="work-status status-live">● Live</span>
+      </div>
+    </a>
+
+    <a href="https://rewindme.media" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">I.ii</span>
+        <span class="work-title">Rewind Network</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">The unified home. Shared discovery, zero algorithm.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">rewindme.media</span><span class="work-status status-hub">Hub</span></div>
+    </a>
+
+    <a href="https://rewindme.studio" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">I.iii</span>
+        <span class="work-title">Rewind Studio</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">The cultural infrastructure studio. Five products, one philosophy.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">rewindme.studio</span><span class="work-status status-hub">Studio</span></div>
+    </a>
+
+    <a href="https://cartoonrewind.tv" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">I.iv</span>
+        <span class="work-title">Cartoon Rewind</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">Saturday mornings forever. He-Man, Transformers, Looney Tunes — animated chaos, preserved.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">cartoonrewind.tv</span><span class="work-status status-live">● Live</span></div>
+    </a>
+
+    <a href="https://movierewind.tv" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">I.v</span>
+        <span class="work-title">Movie Rewind</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">The Free Cinema Channel. Twelve genre galleries from Silent Era to Cult.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">movierewind.tv</span><span class="work-status status-live">● Live</span></div>
+    </a>
+
+    <a href="https://adrewind.tv" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">I.vi</span>
+        <span class="work-title">Ad Rewind</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">The Museum of Commercial Art. Six decades of commercials as cultural artifacts.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">adrewind.tv</span><span class="work-status status-live">● Live</span></div>
+    </a>
+
+    <a href="https://asciiart.live" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">I.vii</span>
+        <span class="work-title">Rewind // ASCII</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">Any music video, rendered live as ASCII art. Character by character, frame by frame.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">asciiart.live</span><span class="work-status status-live">● Live</span></div>
+    </a>
+
+    <a href="https://freezeframe.space" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">I.viii</span>
+        <span class="work-title">Freeze Frame</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">AI transforms any music video into a scroll-controlled cinematic experience.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">freezeframe.space</span><span class="work-status status-live">● Live</span></div>
+    </a>
+  </section>
+
+  <!-- ═══ OPUS II ═══ -->
+  <section class="opus reveal">
+    <div class="opus-header">
+      <span class="opus-number">Opus II</span>
+      <h2 class="opus-title">Live Platforms</h2>
+      <span class="opus-aside">Real-time culture, unfiltered</span>
+    </div>
+
+    <a href="https://riffing.live" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">II.i</span>
+        <span class="work-title">Riffing</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">Live music, no algorithm.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">riffing.live</span><span class="work-status status-beta">Beta</span></div>
+    </a>
+
+    <a href="https://onrunway.live" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">II.ii</span>
+        <span class="work-title">On Runway</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">Live fashion, no algorithm.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">onrunway.live</span><span class="work-status status-beta">Beta</span></div>
+    </a>
+
+    <a href="https://onpaint.live" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">II.iii</span>
+        <span class="work-title">On Paint</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">Live art, no algorithm.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">onpaint.live</span><span class="work-status status-beta">Beta</span></div>
+    </a>
+  </section>
+
+  <!-- ═══ OPUS III ═══ -->
+  <section class="opus reveal">
+    <div class="opus-header">
+      <span class="opus-number">Opus III</span>
+      <h2 class="opus-title">Instruments</h2>
+      <span class="opus-aside">Search, intelligence, utility</span>
+    </div>
+
+    <a href="https://theaskengine.tech" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">III.i</span>
+        <span class="work-title">AskEngine</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">Search any website with AI. Reads the page, turns it into a conversation. Chrome extension.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">theaskengine.tech</span><span class="work-status status-live">● Live</span></div>
+    </a>
+
+    <a href="https://trove.pictures" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">III.ii</span>
+        <span class="work-title">Trove</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">Find the image you can feel. Natural language search across the world's open archives. 70M+ indexed.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">trove.pictures</span><span class="work-status status-beta">Beta</span></div>
+    </a>
+
+    <a href="https://taskbook.xyz" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">III.iii</span>
+        <span class="work-title">Taskbook</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">Post a task. Specialized AI agents with personalities and portfolios bid to do the work. No prompt engineering required.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">taskbook.xyz</span><span class="work-status status-beta">Beta</span></div>
+    </a>
+  </section>
+
+  <!-- ═══ OPUS IV ═══ -->
+  <section class="opus reveal">
+    <div class="opus-header">
+      <span class="opus-number">Opus IV</span>
+      <h2 class="opus-title">Experiments</h2>
+      <span class="opus-aside">Emergent narratives &amp; digital organisms</span>
+    </div>
+
+    <a href="https://looproom.art" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">IV.i</span>
+        <span class="work-title">The Loop Room</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">An endless experiment in emergent narrative.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">looproom.art</span><span class="work-status status-live">● Live</span></div>
+    </a>
+
+    <a href="https://spores.network" target="_blank" class="work">
+      <div class="work-row">
+        <span class="work-index">IV.ii</span>
+        <span class="work-title">Spore Network</span>
+        <span class="work-dash">—</span>
+        <span class="work-desc">A living AI companion. Hatch it, nurture it, watch it grow.</span>
+        <span class="work-arrow">&#8594;</span>
+      </div>
+      <div class="work-meta"><span class="work-url">spores.network</span><span class="work-status status-beta">Beta</span></div>
+    </a>
+  </section>
+
+  <footer class="colophon reveal">
+    <p class="colophon-text">Algorithms replaced discovery with prediction, turning shared experiences into personalized feeds that no one else sees. These sixteen platforms are an attempt to build the way back — one project at a time, with one laptop, from the edge of the Ionian Sea.</p>
+    <div class="colophon-sig">
+      <span class="sig-name">Flex</span>
+      <span class="sig-location">Vlorë, Albania — 2026</span>
+      <a href="mailto:flex@wantmymtv.xyz" class="sig-contact">flex@wantmymtv.xyz</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const label = document.querySelector('.toggle-label');
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  label.textContent = isDark ? 'Light' : 'Dark';
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80);
+  });
+}, { threshold: 0.06 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
